@@ -1,253 +1,365 @@
-# 🏢 HR Analytics & Employer Segmentation
+# Leafy Quest - Quit Weed Journey App
 
-> **Een end-to-end data analytics project dat laat zien hoe ruwe werkgeversdata wordt omgezet naar strategische segmentinzichten — inclusief Python datapipeline, semantisch model en Power BI DAX-measures.**
+![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)
+![iOS](https://img.shields.io/badge/iOS-17.0+-blue.svg)
+![SwiftUI](https://img.shields.io/badge/SwiftUI-Latest-green.svg)
 
----
+**Leafy Quest** is a comprehensive, gamified iOS app designed to help people quit smoking weed. Built with SwiftUI, featuring RevenueCat subscriptions and Google AdMob monetization.
 
-## 📌 Projectoverzicht
+## 🌟 Features
 
-Dit project simuleert een realistisch analytics-vraagstuk voor een HR-dienstverlener:
+### Core Features
+- ✅ **Interactive Onboarding** - Beautiful multi-page welcome flow
+- 📋 **Comprehensive Quiz System** - 11-question assessment to understand user profile
+- 📊 **Progress Tracking** - Real-time streak counter and statistics
+- 💰 **Money Saved Calculator** - Track financial savings from quitting
+- 🏆 **Achievement System** - Unlock badges for milestones
+- 📝 **Daily Journal** - Log mood, cravings, triggers, and strategies
+- 🎯 **Health Milestones** - Track physical and mental improvements
+- 💪 **Coping Strategies** - Emergency SOS tools and techniques
+- 🎨 **Beautiful UI** - Modern design with gradients and animations
 
-> *"Welke werkgevers hebben het hoogste groeipotentieel, en hoe pas ik mijn dienstverlening aan per segment?"*
+### Premium Features
+- 🚫 **Ad-Free Experience**
+- 📈 **Advanced Statistics**
+- 🎯 **Custom Goals**
+- 💡 **Personalized Daily Tips**
+- 📤 **Data Export** (PDF, CSV, JSON)
+- 🌙 **Dark Mode & Themes**
+- 📱 **Home Screen Widgets**
 
-Het toont de volledige keten van **ruwe data → dataproduct → strategisch inzicht**, inclusief aandacht voor GDPR, datakwaliteit en schaalbaarheid.
+### Monetization
+- 💳 **RevenueCat Integration** - Subscription management
+- 📱 **Google AdMob** - Banner, Interstitial, and Rewarded ads
+- 🎁 **Free Trial** - 7-day trial for premium features
+- 💎 **Multiple Plans** - Weekly, Monthly, Annual, Lifetime
 
-### Waarom dit project?
+## 📱 Screenshots
 
-| Business vraag | Analytische oplossing |
-|---|---|
-| Welke werkgevers groeien snelst? | RFM-segmentatie + groeicoëfficiënt |
-| Hoe verdelen we onze consultants? | Segment-priority score per account |
-| Waar liggen de churns? | Predictieve churn-indicator op basis van engagement |
-| Hoe rapporteren we naar management? | Power BI semantic model + DAX measures |
+*Coming soon*
 
----
+## 🏗 Architecture
 
-## 🏗️ Architectuur
-
+### File Structure
 ```
-raw data (CSV/API)
-      │
-      ▼
-┌─────────────────┐
-│  Ingestion Layer │  ← bronvalidatie, schema checks, GDPR-pseudonimisering
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Transformation  │  ← cleaning, feature engineering, segmentlogica
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Semantic Model  │  ← dimensioneel model (ster-schema), business definities
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Power BI Layer │  ← DAX measures, KPI-berekeningen, dashboard-logica
-└────────┬────────┘
-         │
-         ▼
-   Management rapport / Operationeel dashboard
-```
-
----
-
-## 📂 Projectstructuur
-
-```
-hr-analytics-segmentation/
-│
-├── data/
-│   ├── raw/                    # Ruwe brondata (niet ingecheckt, zie .gitignore)
-│   ├── processed/              # Getransformeerde dataset
-│   └── external/               # NACE-codes, regiodata, benchmarks
-│
-├── src/
-│   ├── ingestion/
-│   │   ├── loader.py           # Inladen en valideren van bronbestanden
-│   │   └── gdpr_anonymizer.py  # Pseudonimisering conform AVG/GDPR
-│   ├── transformation/
-│   │   ├── cleaner.py          # Data cleaning pipeline
-│   │   ├── feature_engineering.py  # Segmentatievariabelen bouwen
-│   │   └── segmentation.py     # RFM + K-Means segmentatie
-│   ├── analysis/
-│   │   ├── segment_profiles.py # Segmentkarakteristieken & statistieken
-│   │   └── churn_indicator.py  # Churnscore berekening
-│   └── validation/
-│       ├── data_quality.py     # Great Expectations checks
-│       └── schema_validator.py # Pandera schema validatie
-│
-├── powerbi/
-│   ├── measures/
-│   │   ├── kpi_measures.dax    # Kernmaatstaven (revenue, groei, churn)
-│   │   ├── segmentation.dax    # Segmentlogica in DAX
-│   │   └── time_intelligence.dax  # YTD, MoM, rollende gemiddelden
-│   └── semantic_model.md       # Documentatie van het datamodel
-│
-├── tests/
-│   ├── test_cleaner.py
-│   ├── test_segmentation.py
-│   └── test_data_quality.py
-│
-├── docs/
-│   ├── analytics_roadmap.md    # Prioriteitenmatrix & technische haalbaarheid
-│   ├── data_dictionary.md      # Businessdefinities van alle velden
-│   └── gdpr_register.md        # Verwerkingsregister (demo)
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml              # Automatische tests bij elke push
-│
-├── notebooks/
-│   └── 01_exploratory_analysis.ipynb  # EDA met visualisaties
-│
-├── requirements.txt
-├── pyproject.toml
-└── README.md
+LeafyQuest/
+├── LeafyQuestApp.swift          # Main app entry point
+├── Models.swift                  # Data models and enums
+├── SubscriptionManager.swift     # RevenueCat integration
+├── OnboardingView.swift          # Welcome flow
+├── QuizView.swift                # User assessment quiz
+├── MainTabView.swift             # Main navigation
+├── ProgressView.swift            # Progress tracking
+├── AchievementsView.swift        # Gamification
+├── JournalView.swift             # Daily logging
+├── SettingsView.swift            # App settings
+├── PaywallView.swift             # Premium subscription
+├── AdBannerView.swift            # AdMob integration
+└── Info.plist                    # App configuration
 ```
 
----
+### Key Components
 
-## 🚀 Aan de slag
+#### AppState
+Central state management for:
+- User profile
+- Quit date tracking
+- Streak calculation
+- Achievement unlocking
+- Progress persistence
 
-### Vereisten
+#### SubscriptionManager
+Handles all premium features:
+- RevenueCat SDK integration
+- Package fetching
+- Purchase processing
+- Restore purchases
+- Feature access control
 
-- Python 3.11+
-- Power BI Desktop (voor `.pbix` visualisatie)
+#### Models
+```swift
+- UserProfile
+- QuizQuestion & QuizAnswer
+- Achievement
+- DailyLog
+- HealthMilestone
+- MotivationalQuote
+- CopingStrategy
+```
 
-### Installatie
+## 🚀 Getting Started
 
+### Prerequisites
+- Xcode 15.0+
+- iOS 17.0+
+- CocoaPods or Swift Package Manager
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-git clone https://github.com/jouwgebruikersnaam/hr-analytics-segmentation.git
-cd hr-analytics-segmentation
-
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-pip install -r requirements.txt
+git clone https://github.com/yourusername/leafy-quest.git
+cd leafy-quest
 ```
 
-### Pipeline uitvoeren
+2. **Install Dependencies**
 
+Using Swift Package Manager (recommended):
+- RevenueCat SDK: `https://github.com/RevenueCat/purchases-ios.git`
+- Google Mobile Ads: `https://github.com/googleads/swift-package-manager-google-mobile-ads.git`
+
+Or using CocoaPods:
 ```bash
-# Stap 1: Data inladen & valideren
-python src/ingestion/loader.py
-
-# Stap 2: Cleaning & feature engineering
-python src/transformation/cleaner.py
-python src/transformation/feature_engineering.py
-
-# Stap 3: Segmentatie uitvoeren
-python src/transformation/segmentation.py
-
-# Of alles in één keer:
-python -m src.main
+pod install
 ```
 
-### Tests uitvoeren
+3. **Configure RevenueCat**
+- Sign up at [RevenueCat](https://www.revenuecat.com/)
+- Create a new project
+- Add your iOS app
+- Replace `YOUR_REVENUECAT_API_KEY` in `LeafyQuestApp.swift`
 
+4. **Configure Google AdMob**
+- Sign up at [Google AdMob](https://admob.google.com/)
+- Create a new app
+- Get your App ID
+- Replace test ad unit IDs in `AdBannerView.swift`
+- Update `GADApplicationIdentifier` in `Info.plist`
+
+5. **Run the app**
 ```bash
-pytest tests/ -v --cov=src --cov-report=html
+open LeafyQuest.xcodeproj
+```
+Press ⌘R to build and run
+
+## 🔧 Configuration
+
+### RevenueCat Setup
+
+1. Create products in App Store Connect:
+   - Weekly subscription
+   - Monthly subscription
+   - Annual subscription
+   - Lifetime purchase (non-consumable)
+
+2. Configure offerings in RevenueCat dashboard
+
+3. Add entitlement ID: `premium`
+
+### AdMob Setup
+
+1. Create ad units:
+   - Banner Ad
+   - Interstitial Ad
+   - Rewarded Ad
+
+2. Update ad unit IDs in code (replace test IDs):
+```swift
+// Banner: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
+// Interstitial: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
+// Rewarded: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
 ```
 
----
+3. Add SKAdNetwork IDs to Info.plist (already included)
 
-## 📊 Segmentatielogica
+## 📊 Data Persistence
 
-De kern van dit project is een **RFM-gebaseerde segmentatie** gecombineerd met K-Means clustering:
+The app uses UserDefaults for data persistence:
+- User profile and quiz answers
+- Quit date and streak
+- Achievements
+- Daily journal entries
+- Settings and preferences
 
-| Dimensie | Definitie | Gewicht |
-|---|---|---|
-| **Recency** | Dagen sinds laatste interactie met dienstverlener | 30% |
-| **Frequency** | Aantal contactmomenten afgelopen 12 maanden | 40% |
-| **Monetary** | Geschatte omzetpotentieel op basis van bedrijfsgrootte | 30% |
+For production, consider upgrading to:
+- Core Data for complex queries
+- CloudKit for cross-device sync
+- Keychain for sensitive data
 
-### Segmenten
+## 🎨 Design System
 
-| Segment | Profiel | Prioriteit |
-|---|---|---|
-| 🟢 **Champions** | Hoge RFM, actief, groeiend | Top |
-| 🔵 **Potentials** | Goede frequency, laag monetair | Hoog |
-| 🟡 **At Risk** | Vroeger actief, nu stiller | Medium |
-| 🔴 **Lost** | Geen recente interactie | Laag / reactivatie |
+### Colors
+- **Primary**: Green (health, success)
+- **Secondary**: Blue (calm, trust)
+- **Accent**: Purple, Orange, Yellow (achievements)
+- **Alert**: Red (warnings)
 
----
+### Typography
+- **Headings**: System Bold
+- **Body**: System Regular
+- **Captions**: System Regular (smaller)
 
-## 📐 Power BI DAX — Voorbeeldmeasures
+### Components
+- Rounded corners (12-16px)
+- Subtle shadows
+- Gradient backgrounds
+- Smooth animations
 
-```dax
--- Churn Risk Score (genormaliseerd 0-100)
-Churn Risk Score =
-VAR DaysSinceContact =
-    DATEDIFF(MAX(Employers[LastContactDate]), TODAY(), DAY)
-VAR FrequencyScore =
-    DIVIDE(CALCULATE(COUNTROWS(Interactions)), 12)
-VAR NormDays = MIN(DIVIDE(DaysSinceContact, 365), 1)
-RETURN
-    ROUND((NormDays * 0.6 + (1 - FrequencyScore) * 0.4) * 100, 0)
+## 🧪 Testing
+
+### Test Accounts
+- **RevenueCat**: Use sandbox mode
+- **AdMob**: Test ad units included
+
+### Debug Features
+- Skip quiz option
+- Reset progress
+- View all achievements
+- Manual streak adjustment
+
+## 📈 Analytics
+
+Recommended analytics to track:
+- Daily active users (DAU)
+- Retention rates (D1, D7, D30)
+- Average session length
+- Quiz completion rate
+- Journal entry frequency
+- Achievement unlock rates
+- Subscription conversion
+- Ad impressions & clicks
+- In-app purchase revenue
+
+Consider integrating:
+- Firebase Analytics
+- Mixpanel
+- Amplitude
+
+## 🔐 Privacy & Security
+
+- **No personal health data** stored on servers
+- **Local-first** architecture
+- **Transparent data usage**
+- GDPR compliant
+- ATT (App Tracking Transparency) support
+
+## 📦 Dependencies
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/RevenueCat/purchases-ios.git", from: "4.0.0"),
+    .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", from: "11.0.0")
+]
 ```
 
-```dax
--- Segment Priority Index
-Segment Priority Index =
-SWITCH(
-    TRUE(),
-    [Churn Risk Score] < 20 && [Revenue Potential] > 50000, "Champion",
-    [Churn Risk Score] < 40, "Potential",
-    [Churn Risk Score] < 70, "At Risk",
-    "Lost"
-)
+## 🚀 Deployment
+
+### App Store Submission
+
+1. **Prepare assets**:
+   - App icon (1024x1024)
+   - Screenshots (all sizes)
+   - Preview video (optional)
+
+2. **Update version**:
+   - Increment `CFBundleShortVersionString`
+   - Increment `CFBundleVersion`
+
+3. **Archive and upload**:
+   - Product → Archive
+   - Distribute to App Store Connect
+
+4. **App Review Information**:
+   - Test account (if needed)
+   - Review notes
+   - Demo video
+
+### App Store Optimization (ASO)
+
+**Title**: Leafy Quest: Quit Weed Tracker
+
+**Subtitle**: Stop Smoking & Track Progress
+
+**Keywords**: quit weed, stop smoking, sobriety tracker, addiction recovery, quit cannabis, health tracker, wellness app, habit tracker
+
+**Description**:
+```
+Transform your life with Leafy Quest, the #1 app for quitting weed!
+
+🌱 WHY LEAFY QUEST?
+• Beautiful, gamified interface makes quitting fun
+• Track your progress with detailed statistics
+• Unlock achievements as you reach milestones
+• Daily journal to log mood and cravings
+• Emergency SOS tools when you need support
+• See real-time money saved
+• Health timeline showing improvements
+
+🎯 FEATURES
+✓ Personalized quit plan based on your profile
+✓ Streak counter and progress tracking
+✓ Achievement badges and rewards
+✓ Daily motivational quotes
+✓ Coping strategies database
+✓ Mood and craving tracker
+✓ Money saved calculator
+✓ Health milestone timeline
+
+💎 PREMIUM
+• Remove all ads
+• Advanced analytics
+• Custom goals
+• Data export
+• Exclusive themes
+• Priority support
+
+Join thousands who've successfully quit with Leafy Quest!
+
+Download now and start your journey to freedom. 🚀
+
+---
+Note: This app is not a substitute for professional medical advice.
 ```
 
-Volledige measures staan in [`powerbi/measures/`](./powerbi/measures/).
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- RevenueCat for subscription management
+- Google AdMob for monetization
+- SF Symbols for icons
+- Community feedback and support
+
+## 📞 Support
+
+- **Email**: support@leafyquest.com
+- **Website**: https://leafyquest.com
+- **Twitter**: @LeafyQuestApp
+
+## 🗺 Roadmap
+
+### Version 1.1
+- [ ] Apple Watch companion app
+- [ ] Home screen widgets
+- [ ] Siri shortcuts integration
+- [ ] Share progress with friends
+
+### Version 1.2
+- [ ] Community features
+- [ ] Support groups
+- [ ] Expert content library
+- [ ] Guided meditations
+
+### Version 2.0
+- [ ] AI-powered personalized coaching
+- [ ] Predictive craving alerts
+- [ ] Social challenges
+- [ ] Therapy integration
 
 ---
 
-## 🔒 GDPR & Data Governance
+Made with ❤️ for everyone on their quit journey
 
-- Alle persoonsgegevens worden **gepseudonimieerd** voor verwerking (`src/ingestion/gdpr_anonymizer.py`)
-- Ruwe data staat **nooit** in de repository (`.gitignore` enforced)
-- Verwerkingsregister gedocumenteerd in [`docs/gdpr_register.md`](./docs/gdpr_register.md)
-- Data retention policy: verwerkte data maximaal 24 maanden bewaard
-
----
-
-## 🗺️ Analytics Roadmap
-
-Zie [`docs/analytics_roadmap.md`](./docs/analytics_roadmap.md) voor de volledige prioriteitenmatrix.
-
-**Korte termijn (Q3 2026)**
-- [x] Segmentatiepipeline operationeel
-- [x] Power BI rapport voor account managers
-- [ ] Automatische maandelijkse refresh via Fabric
-
-**Middellange termijn (Q4 2026)**
-- [ ] Predictief churnmodel (logistische regressie)
-- [ ] Integratie met CRM-systeem
-- [ ] Self-service analytics portaal
-
----
-
-## 🛠️ Tech Stack
-
-| Laag | Technologie |
-|---|---|
-| Data processing | Python (pandas, scikit-learn) |
-| Data validatie | Great Expectations, Pandera |
-| Visualisatie | Power BI, matplotlib, seaborn |
-| DAX / Semantic model | Power BI Desktop / Fabric |
-| Testing | pytest, pytest-cov |
-| CI/CD | GitHub Actions |
-| Versiebeheer | Git + pre-commit hooks |
-
----
-
-## 📬 Contact
-
-Vragen of feedback? Bereik me via [LinkedIn](https://linkedin.com/in/jouwprofiel) of open een GitHub Issue.
-
----
-
-*Dit project is gebouwd als portfolio demonstratie. Alle data is synthetisch gegenereerd en bevat geen echte persoonsgegevens.*
+**Remember**: Every day smoke-free is a victory! 🌟
