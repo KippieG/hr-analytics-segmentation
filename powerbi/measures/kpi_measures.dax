@@ -1,0 +1,169 @@
+// =============================================================================
+// KPI MEASURES — HR Analytics & Employer Segmentation
+// Power BI / Microsoft Fabric
+// =============================================================================
+// Conventie:
+//   - Measures starten met een werkwoord of zelfstandig naamwoord
+//   - Variabelen in CamelCase, measures in Title Case met spaties
+//   - Elke measure heeft een commentaarblok met businessdefinitie
+// =============================================================================
+
+
+// -----------------------------------------------------------------------------
+// SECTIE 1: Basis KPI's
+// -----------------------------------------------------------------------------
+
+// Totaal aantal actieve werkgevers in de selectie
+[Actieve Werkgevers] =
+CALCULATE(
+    COUNTROWS(Employers),
+    Employers[Status] = "Active"
+)
+
+
+// Gemiddeld aantal interacties per werkgever (afgelopen 12 maanden)
+[Gem. Interacties per Werkgever] =
+VAR TotalInteractions =
+    CALCULATE(
+        COUNTROWS(Interactions),
+        DATESINPERIOD(
+            Interactions[InteractionDate],
+            LASTDATE(Interactions[InteractionDate]),
+            -12, MONTH
+        )
+    )
+VAR TotalEmployers = [Actieve Werkgevers]
+RETURN
+    DIVIDE(TotalInteractions, TotalEmployers, 0)
+
+
+// Totaal geschat omzetpotentieel van het geselecteerde segment
+[Totaal Omzetpotentieel] =
+SUMX(
+    Employers,
+    Employers[RevenuePotential]
+)
+
+
+// -----------------------------------------------------------------------------
+// SECTIE 2: Churn & Risico
+// -----------------------------------------------------------------------------
+
+// Churn Risk Score per werkgever (0–100, genormaliseerd)
+// Hogere score = hoger risico op vertrek of inactiviteit
+[Churn Risk Score] =
+VAR DaysSinceContact =
+    DATEDIFF(
+        CALCULATE(MAX(Interactions[InteractionDate])),
+        TODAY(),
+        DAY
+    )
+VAR FrequencyLast12M =
+    CALCULATE(
+        COUNTROWS(Interactions),
+        DATESINPERIOD(
+            Interactions[InteractionDate],
+            TODAY(),
+            -12, MONTH
+        )
+    )
+VAR NormRecency = MIN(DIVIDE(DaysSinceContact, 365), 1)
+VAR NormFrequency = 1 - MIN(DIVIDE(FrequencyLast12M, 24), 1)
+RETURN
+    ROUND((NormRecency * 0.6 + NormFrequency * 0.4) * 100, 0)
+
+
+// Percentage werkgevers met hoog churnrisico (score > 70)
+[% Hoog Churnrisico] =
+DIVIDE(
+    CALCULATE(
+        COUNTROWS(Employers),
+        [Churn Risk Score] > 70
+    ),
+    [Actieve Werkgevers],
+    0
+)
+
+
+// -----------------------------------------------------------------------------
+// SECTIE 3: Segmentatie
+// -----------------------------------------------------------------------------
+
+// Prioriteitsindex per segment (voor sortering in rapporten)
+[Segment Prioriteit Label] =
+SWITCH(
+    TRUE(),
+    [Churn Risk Score] < 20 && [Totaal Omzetpotentieel] > 50000, "🟢 Champion",
+    [Churn Risk Score] < 40,                                       "🔵 Potential",
+    [Churn Risk Score] < 70,                                       "🟡 At Risk",
+                                                                   "🔴 Lost"
+)
+
+
+// Aandeel per segment als % van totale portefeuille
+[Segment Aandeel %] =
+DIVIDE(
+    COUNTROWS(Employers),
+    CALCULATE(COUNTROWS(Employers), ALL(Employers[SegmentName])),
+    0
+)
+
+
+// -----------------------------------------------------------------------------
+// SECTIE 4: Tijdsintelligentie
+// -----------------------------------------------------------------------------
+
+// Interacties jaar-tot-datum
+[Interacties YTD] =
+CALCULATE(
+    COUNTROWS(Interactions),
+    DATESYTD(DateTable[Date])
+)
+
+
+// Groei interacties t.o.v. vorige maand (%)
+[MoM Groei Interacties %] =
+VAR CurrentMonth = [Interacties YTD]
+VAR PreviousMonth =
+    CALCULATE(
+        COUNTROWS(Interactions),
+        DATEADD(DateTable[Date], -1, MONTH)
+    )
+RETURN
+    DIVIDE(CurrentMonth - PreviousMonth, PreviousMonth, BLANK())
+
+
+// Rollend gemiddelde interacties (3 maanden)
+[Rolling 3M Interacties] =
+AVERAGEX(
+    DATESINPERIOD(
+        DateTable[Date],
+        LASTDATE(DateTable[Date]),
+        -3, MONTH
+    ),
+    CALCULATE(COUNTROWS(Interactions))
+)
+
+
+// -----------------------------------------------------------------------------
+// SECTIE 5: Consultant productiviteit
+// -----------------------------------------------------------------------------
+
+// Gemiddelde time-to-fill per vacature (dagen)
+[Gem. Time-to-Fill] =
+AVERAGEX(
+    Vacancies,
+    DATEDIFF(Vacancies[OpenDate], Vacancies[FilledDate], DAY)
+)
+
+
+// Plaatsingsratio: geplaatste vacatures / totaal opengesteld
+[Plaatsingsratio %] =
+DIVIDE(
+    CALCULATE(
+        COUNTROWS(Vacancies),
+        Vacancies[Status] = "Filled"
+    ),
+    COUNTROWS(Vacancies),
+    0
+)

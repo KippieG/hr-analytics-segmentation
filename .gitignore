@@ -1,0 +1,39 @@
+# Ruwe data — NOOIT in repo (GDPR)
+data/raw/
+data/external/
+
+# Verwerkte data (kan gevoelige info bevatten)
+data/processed/
+
+# Logs
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Omgevingsvariabelen (bevat GDPR_SALT!)
+.env
+.env.*
+
+# Testing
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Power BI (binaire bestanden, niet handig in diff)
+*.pbix
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# macOS
+.DS_Store

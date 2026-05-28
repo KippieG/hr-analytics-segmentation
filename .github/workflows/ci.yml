@@ -1,0 +1,71 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Tests & Kwaliteitscontroles
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 instellen
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Dependencies installeren
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Linting (ruff)
+        run: ruff check src/ tests/
+
+      - name: Type checking (mypy)
+        run: mypy src/ --ignore-missing-imports
+
+      - name: Unit tests uitvoeren
+        run: pytest tests/ -v --cov=src --cov-report=xml --cov-report=term-missing
+
+      - name: Coverage rapporteren
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+
+  data-quality:
+    name: Demo Data Kwaliteitscheck
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Demo data genereren
+        run: python src/generate_demo_data.py
+
+      - name: Datakwaliteit valideren
+        run: python -c "
+          import pandas as pd
+          from src.validation.data_quality import DataQualityValidator
+          v = DataQualityValidator()
+          emp = pd.read_csv('data/raw/employers.csv')
+          report = v.validate_employers(emp)
+          print(report.summary())
+          assert report.passed, 'Data quality check mislukt!'
+          "
