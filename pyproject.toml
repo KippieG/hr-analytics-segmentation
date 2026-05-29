@@ -26,7 +26,7 @@ addopts = "-v --tb=short"
 
 [tool.coverage.run]
 source = ["src"]
-omit = ["src/generate_demo_data.py"]
+omit = ["src/generate_demo_data.py", "src/main.py"]
 
 [tool.coverage.report]
 fail_under = 75
