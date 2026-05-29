@@ -18,7 +18,9 @@ from src.transformation.segmentation import EmployerSegmentation
 from src.validation.data_quality import DataQualityValidator
 from src.analysis.segment_profiles import SegmentProfiler
 
-# Logging configuratie
+# Logs map aanmaken voor logging opstart
+Path("logs").mkdir(exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",

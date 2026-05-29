@@ -5,8 +5,8 @@ Employer- en interactieschema's valideren kolommen, types en waardebereiken
 voordat de data de transformatielaag ingaat.
 """
 
-import pandera as pa
-from pandera import Column, DataFrameSchema, Check
+import pandera.pandas as pa
+from pandera.pandas import Column, DataFrameSchema, Check
 
 VALID_SECTORS = {"tech", "healthcare", "manufacturing", "retail", "finance", "construction", "logistics"}
 VALID_SIZES = {"micro", "small", "medium", "large"}
