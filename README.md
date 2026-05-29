@@ -1,5 +1,7 @@
 # HR Analytics — Employer Segmentation
 
+[![CI](https://github.com/KippieG/hr-analytics-segmentation/actions/workflows/ci.yml/badge.svg)](https://github.com/KippieG/hr-analytics-segmentation/actions/workflows/ci.yml)
+![Coverage](https://img.shields.io/badge/coverage-99.6%25-brightgreen)
 ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
 ![Power BI](https://img.shields.io/badge/Power%20BI-DAX-yellow.svg)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-K--Means-orange.svg)
@@ -9,16 +11,22 @@ End-to-end pipeline that segments an employer portfolio using **RFM scoring + K-
 
 ---
 
-## Overview
+## Business case
 
-The pipeline classifies every employer in a portfolio into one of four actionable segments:
+Many HR service providers treat their entire employer portfolio the same way — same contact frequency, same approach, same priority. This pipeline changes that.
 
-| Segment | Description | Recommended action |
-|---|---|---|
-| **Champions** | Most valuable, highly active employers | Retain — proactive contact, exclusive services |
-| **Potentials** | Regular contact, not yet fully leveraged | Develop — identify upsell opportunities |
-| **At Risk** | Previously active, recently quieter | Reactivate — initiate personal re-contact |
-| **Lost** | No recent interaction | Evaluate — win-back campaign or write off |
+By scoring every employer on **Recency** (how long since last contact), **Frequency** (how often they interact) and **Monetary** (estimated revenue potential), the pipeline automatically classifies the full portfolio into four actionable segments. Account managers get a daily-refreshed Power BI dashboard that tells them exactly who to call first and why.
+
+**Results on a portfolio of 1,000 employers:**
+
+| Segment | Count | Share | Avg revenue potential | Avg priority score | Recommended action |
+|---|---|---|---|---|---|
+| 🟢 Champions | 94 | 9% | €233,000 | 48 / 100 | Retain — proactive contact |
+| 🔵 Potentials | 139 | 14% | €40,000 | 40 / 100 | Develop — identify upsell |
+| 🟡 At Risk | 618 | **62%** | €32,000 | 58 / 100 | Reactivate — personal re-contact |
+| 🔴 Lost | 149 | 15% | €41,000 | 92 / 100 | Evaluate — win-back or write off |
+
+> **Key finding:** 62% of employers have drifted into the At Risk segment — they were once active but contact has gone quiet. Prioritising re-engagement here represents the highest short-term recovery opportunity.
 
 ---
 
@@ -32,7 +40,8 @@ data/raw/
 src/
 ├── ingestion/
 │   ├── loader.py          # CSV loading + ingestion report
-│   └── gdpr_anonymizer.py # PII pseudonymisation before processing
+│   ├── gdpr_anonymizer.py # PII pseudonymisation before processing
+│   └── schema_definitions.py # Pandera schema validation
 ├── transformation/
 │   └── segmentation.py    # RFM computation + K-Means clustering
 ├── validation/
@@ -50,7 +59,11 @@ docs/
 └── gdpr_register.md       # Processing register and retention policy
 
 tests/
-└── test_segmentation.py
+├── test_segmentation.py
+├── test_data_quality.py
+├── test_gdpr_anonymizer.py
+├── test_segment_profiles.py
+└── test_loader.py
 ```
 
 ---
@@ -73,7 +86,7 @@ tests/
 ```bash
 pip install -r requirements.txt
 
-# Generate synthetic demo data
+# Generate synthetic demo data (1,000 employers, ~7,700 interactions)
 python -m src.generate_demo_data
 
 # Run the full pipeline
@@ -87,8 +100,10 @@ python -m src.main --skip-validation
 **Run tests:**
 
 ```bash
-pytest                          # all tests
-pytest --cov=src --cov-report=term-missing
+pytest                                        # 66 tests
+pytest --cov=src --cov-report=term-missing    # 99.6% coverage
+ruff check src/ tests/                        # linting
+mypy src/ --ignore-missing-imports            # type checking
 ```
 
 ---
@@ -129,7 +144,7 @@ SWITCH(
 
 - All PII fields are pseudonymised via `gdpr_anonymizer.py` before processing.
 - No personal data is written to `data/processed/`.
-- Processing register and retention schedule: `docs/gdpr_register.md`.
+- Processing register and retention schedule: [`docs/gdpr_register.md`](docs/gdpr_register.md).
 - Legal basis: legitimate interest (B2B employer relationship management).
 
 ---
@@ -138,7 +153,7 @@ SWITCH(
 
 | Phase | Initiatives |
 |---|---|
-| Q3 2026 (done) | Segmentation pipeline, Power BI dashboard, data quality monitoring |
+| Q3 2026 ✅ | Segmentation pipeline, Power BI dashboard, data quality monitoring |
 | Q4 2026 | Predictive churn model, CRM integration, self-service analytics portal |
 | H1 2027 | NL querying, market benchmarking, anomaly detection |
 
@@ -152,8 +167,8 @@ Full details: [`docs/analytics_roadmap.md`](docs/analytics_roadmap.md)
 |---|---|
 | pandas | Data manipulation |
 | scikit-learn | K-Means, MinMaxScaler |
-| numpy | Numerical operations |
-| pytest / coverage | Testing |
+| pandera | Schema validation |
+| pytest / coverage | Testing (66 tests, 99.6% coverage) |
 | ruff / mypy | Linting and type checking |
 
 ---
