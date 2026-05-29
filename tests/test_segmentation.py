@@ -2,12 +2,13 @@
 Unit tests voor de segmentatielogica.
 """
 
-import pytest
-import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
 
-from src.transformation.segmentation import EmployerSegmentation, SEGMENT_DEFINITIONS
+import numpy as np
+import pandas as pd
+import pytest
+
+from src.transformation.segmentation import SEGMENT_DEFINITIONS, EmployerSegmentation
 
 
 @pytest.fixture

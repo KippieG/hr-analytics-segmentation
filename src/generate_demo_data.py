@@ -106,9 +106,8 @@ def generate_interactions(employers: pd.DataFrame, avg_per_employer: float = 8.0
     Genereer interactiehistorie.
     Champions krijgen veel contactmomenten, Lost-kandidaten weinig.
     """
-    records = []
+    records: list[dict] = []
     end_date = datetime.now()
-    start_date = end_date - timedelta(days=730)
 
     for _, employer in employers.iterrows():
         # Simuleer realistische verdeling: sommige werkgevers weinig contact

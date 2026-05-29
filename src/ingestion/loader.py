@@ -3,16 +3,15 @@ Ingestion layer — brondata inladen, valideren en loggen.
 Houdt rekening met GDPR, schaalbaarheid en datastandaarden.
 """
 
-import logging
 import hashlib
-from pathlib import Path
+import logging
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
-import pandera as pa
 
-from src.ingestion.schema_definitions import employer_schema, interaction_schema
 from src.ingestion.gdpr_anonymizer import GDPRAnonymizer
+from src.ingestion.schema_definitions import employer_schema, interaction_schema
 
 logger = logging.getLogger(__name__)
 

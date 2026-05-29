@@ -10,9 +10,8 @@ Output: elk werkgeversrecord krijgt een segment-label + prioriteitsscore.
 """
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler

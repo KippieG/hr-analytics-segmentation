@@ -10,13 +10,13 @@ Gebruik:
 import argparse
 import logging
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
+from src.analysis.segment_profiles import SegmentProfiler
 from src.ingestion.loader import DataLoader
 from src.transformation.segmentation import EmployerSegmentation
 from src.validation.data_quality import DataQualityValidator
-from src.analysis.segment_profiles import SegmentProfiler
 
 # Logs map aanmaken voor logging opstart
 Path("logs").mkdir(exist_ok=True)
